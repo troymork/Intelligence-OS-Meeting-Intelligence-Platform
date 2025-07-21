@@ -3,8 +3,7 @@
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "version": "latest",
-      "enableNonRootDocker": "true"
+      "enableNonRootDocker": true
     },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "18"
@@ -20,7 +19,7 @@
       "onAutoForward": "notify"
     },
     "8000": {
-      "label": "Backend API",
+      "label": "Backend API", 
       "onAutoForward": "notify"
     },
     "5000": {
@@ -40,7 +39,7 @@
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "./scripts/setup-codespace.sh",
+  "postCreateCommand": "chmod +x scripts/*.sh && ./scripts/setup-codespace.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -49,20 +48,14 @@
         "bradlc.vscode-tailwindcss",
         "ms-vscode.vscode-docker",
         "ms-vscode.vscode-json",
-        "redhat.vscode-yaml",
-        "ms-python.flake8",
-        "ms-python.black-formatter"
+        "redhat.vscode-yaml"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/python/current/bin/python",
-        "python.formatting.provider": "black",
         "editor.formatOnSave": true,
         "files.autoSave": "afterDelay"
       }
     }
   },
-  "remoteUser": "codespace",
-  "mounts": [
-    "source=codespace-intelligence-os-node-modules,target=/workspaces/intelligence-os-platform/src/frontend/node_modules,type=volume"
-  ]
+  "remoteUser": "codespace"
 }
