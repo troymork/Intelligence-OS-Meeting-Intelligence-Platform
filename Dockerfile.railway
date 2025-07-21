@@ -1,0 +1,42 @@
+# Multi-service Dockerfile for Railway deployment
+FROM node:18-alpine AS frontend-build
+
+WORKDIR /app/frontend
+COPY src/frontend/package*.json ./
+RUN npm ci --only=production
+COPY src/frontend/ ./
+RUN npm run build
+
+FROM python:3.9-slim AS backend
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy backend requirements
+COPY src/backend/requirements-minimal.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend source
+COPY src/backend/ ./backend/
+COPY scripts/ ./scripts/
+
+# Copy built frontend
+COPY --from=frontend-build /app/frontend/dist ./frontend/dist/
+
+# Make scripts executable
+RUN chmod +x scripts/*.sh
+
+# Expose port
+EXPOSE $PORT
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:$PORT/health || exit 1
+
+# Start command
+CMD ["./scripts/deploy-railway.sh"]

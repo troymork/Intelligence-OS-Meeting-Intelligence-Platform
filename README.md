@@ -1,368 +1,246 @@
-# Oracle 9.1 Protocol Development Kit - Complete Framework Suite
+# Intelligence OS Platform 🧠
 
-## 🎯 **Overview**
+> **Oracle 9.1 Protocol Compliant Meeting Intelligence Platform**
 
-The Oracle 9.1 Protocol Development Kit is a comprehensive, production-ready framework for building intelligent meeting analysis and organizational intelligence platforms. This repository contains the complete suite of protocols, frameworks, and integrations developed through extensive collaborative design and testing.
+A comprehensive AI-powered system that transforms meetings into actionable intelligence through sophisticated AI orchestration, voice-first interfaces, and real-time collaborative analysis.
 
-## 🧠 **Complete Protocol Suite**
+## 🚀 Quick Start with GitHub Codespaces
 
-### **🔮 Oracle 9.1 Protocol (Core)**
-- **Six-Dimensional Analysis Framework**
-- **Human Needs Analysis Engine**
-- **Strategic Alignment Assessment**
-- **Pattern Recognition & Insights**
-- **Decision Tracking & Validation**
-- **Knowledge Evolution Mapping**
-- **Organizational Wisdom Development**
+**Recommended**: Use GitHub Codespaces to run this resource-intensive platform in the cloud, keeping your local machine free!
 
-### **🤖 MCP (Model Context Protocol) Integration**
-- **Context-Aware AI Communication**
-- **Multi-Model Coordination**
-- **Persistent Context Management**
-- **Cross-Session Memory Continuity**
-- **Intelligent Context Switching**
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/your-username/intelligence-os-platform)
 
-### **🧠 Mem0 Memory Management**
-- **Multi-Level Memory Architecture**
-- **Working Memory for Active Sessions**
-- **Factual Memory for Persistent Knowledge**
-- **Episodic Memory for Meeting Experiences**
-- **Semantic Memory for Organizational Wisdom**
+### 1. Create Codespace
+- Click the "Code" button above
+- Select "Codespaces" tab
+- Click "Create codespace on main"
 
-### **👤 Tanka.ai Personal Assistant Framework**
-- **Personality-Driven AI Assistants**
-- **Strategic Post-Meeting Debriefs**
-- **Individual Perspective Integration**
-- **Continuous Learning & Adaptation**
-- **Myers-Briggs, DiSC, Big Five Integration**
-
-### **🔄 Zoom + Tines Workflow Automation**
-- **Automated Meeting Capture**
-- **Real-time Processing Workflows**
-- **Intelligent Action Distribution**
-- **Follow-up Orchestration**
-- **Discrepancy Resolution Workflows**
-
-## 🏗️ **Architecture Overview**
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Oracle 9.1 Protocol Suite                   │
-├─────────────────────────────────────────────────────────────────┤
-│  🎤 Voice Interface  │  📊 Analytics Dashboard  │  🤖 AI Engine  │
-├─────────────────────────────────────────────────────────────────┤
-│                        Core Protocol Layer                      │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐│
-│  │   Oracle    │ │     MCP     │ │   Tanka.ai  │ │    Mem0     ││
-│  │ 9.1 Protocol│ │ Integration │ │ Assistants  │ │   Memory    ││
-│  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘│
-├─────────────────────────────────────────────────────────────────┤
-│                     Integration Layer                           │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐│
-│  │    Zoom     │ │    Tines    │ │   Webhook   │ │     API     ││
-│  │ Integration │ │  Workflows  │ │  Handlers   │ │  Gateway    ││
-│  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘│
-├─────────────────────────────────────────────────────────────────┤
-│                    Infrastructure Layer                         │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐│
-│  │ PostgreSQL  │ │   Neo4j     │ │   Qdrant    │ │    Redis    ││
-│  │ + pgvector  │ │   Graph     │ │   Vector    │ │   Cache     ││
-│  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘│
-└─────────────────────────────────────────────────────────────────┘
-```
-
-## 🚀 **Quick Start**
-
-### **Prerequisites**
-- Docker & Docker Compose
-- Node.js 20+ & pnpm
-- Python 3.11+
-- Git
-
-### **1. Clone Repository**
+### 2. Start the Platform
+Once your Codespace loads:
 ```bash
-git clone https://github.com/troymork/Intelligence-OS-Meeting-Intelligence-Platform.git
-cd Intelligence-OS-Meeting-Intelligence-Platform
+./start-platform.sh
 ```
 
-### **2. Environment Setup**
+### 3. Access Your Platform
+- **Frontend**: `https://your-codespace-3000.app.github.dev`
+- **Backend API**: `https://your-codespace-8000.app.github.dev`
+- **Voice Processor**: `https://your-codespace-5000.app.github.dev`
+
+📖 **[Full Codespace Setup Guide](README-CODESPACE.md)**
+
+## ✨ Features
+
+### 🎯 Oracle 9.1 Protocol Compliance
+- **Six-Dimensional Analysis**: Structural Extraction, Pattern Recognition, Strategic Synthesis, Narrative Integration, Solution Architecture, Human Needs Dynamics
+- **Comprehensive Output Generation**: 12 standardized output sections
+- **External Integrations**: Zapier, Notion, Dart Action Management, Git
+
+### 🎤 Voice-First Interface
+- **Real-time Speech Recognition**: Multi-speaker support with high accuracy
+- **Speaker Identification**: Individual voice tracking and attribution
+- **Voice Commands**: Hands-free interaction and control
+- **Audio Processing**: Noise reduction and enhancement
+
+### 🤖 AI Orchestration Framework
+- **AI Conductor**: Coordinates multiple specialized AI engines
+- **Specialized AI Performers**: Six dedicated AI systems for different analysis dimensions
+- **Conflict Resolution**: Intelligent handling of disagreements between AI analyses
+- **Result Synthesis**: Coherent integration of multiple AI outputs
+
+### 📊 Human Needs Analysis
+- **Six Fundamental Needs**: Certainty, Variety, Significance, Connection, Growth, Contribution
+- **Need Imbalance Detection**: Identifies overemphasis and underemphasis patterns
+- **Targeted Interventions**: Personalized recommendations for individual and team development
+- **Privacy Protection**: Ethical handling of psychological data
+
+### 🎯 Strategic Framework Integration
+- **SDG Alignment**: Sustainable Development Goals assessment
+- **Doughnut Economy**: Regenerative and distributive analysis
+- **Agreement Economy**: Collaboration and value-sharing evaluation
+- **Multi-Framework Synthesis**: Identifies synergies and optimization opportunities
+
+## 🏗 Architecture
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        VUI[Voice User Interface]
+        WEB[Web Dashboard]
+        MOB[Mobile App]
+    end
+    
+    subgraph "AI Processing Layer"
+        CONDUCTOR[AI Conductor]
+        STRUCT[Structural AI]
+        PATTERN[Pattern AI]
+        STRATEGIC[Strategic AI]
+        NARRATIVE[Narrative AI]
+        SOLUTION[Solution AI]
+        NEEDS[Human Needs AI]
+    end
+    
+    subgraph "Core Services"
+        CONV[Conversation Engine]
+        ORCH[AI Orchestration]
+        HUMAN[Human Needs Analysis]
+        STRAT[Strategic Analysis]
+        OUTPUT[Output Generation]
+    end
+    
+    subgraph "Data Layer"
+        REALTIME[Real-time Database]
+        ANALYTICS[Analytics Database]
+        KNOWLEDGE[Knowledge Graph]
+    end
+    
+    VUI --> CONV
+    WEB --> CONV
+    CONV --> CONDUCTOR
+    CONDUCTOR --> STRUCT
+    CONDUCTOR --> PATTERN
+    CONDUCTOR --> STRATEGIC
+    CONDUCTOR --> NARRATIVE
+    CONDUCTOR --> SOLUTION
+    CONDUCTOR --> NEEDS
+    CONV --> ORCH
+    ORCH --> OUTPUT
+    OUTPUT --> REALTIME
+```
+
+## 🛠 Technology Stack
+
+### Frontend
+- **React 18** with TypeScript
+- **Vite** for fast development
+- **Tailwind CSS** with Neumorphic design
+- **Web Speech API** for voice interaction
+- **D3.js** for data visualization
+
+### Backend
+- **Python 3.9** with FastAPI
+- **PostgreSQL** for primary database
+- **Redis** for caching and real-time data
+- **SQLAlchemy** for ORM
+- **Celery** for background processing
+
+### AI & ML
+- **OpenAI GPT-4** for language processing
+- **Anthropic Claude** for analysis
+- **Transformers** for NLP tasks
+- **SpeechRecognition** for voice processing
+
+### Infrastructure
+- **Docker** for containerization
+- **Kubernetes** for orchestration
+- **Terraform** for infrastructure as code
+- **Prometheus & Grafana** for monitoring
+
+## 📋 Requirements
+
+### System Requirements (for local development)
+- **CPU**: 4+ cores recommended
+- **RAM**: 8GB minimum, 16GB recommended
+- **Storage**: 10GB free space
+- **OS**: macOS, Linux, or Windows with WSL2
+
+### Cloud Requirements (GitHub Codespaces)
+- **GitHub account** with Codespaces access
+- **Web browser** (Chrome, Firefox, Safari, Edge)
+- **Internet connection**
+
+## 🚀 Deployment Options
+
+### 1. GitHub Codespaces (Recommended)
 ```bash
-# Copy environment template
-cp .env.example .env
-
-# Edit with your API keys and configuration
-nano .env
+# Automatic setup in cloud environment
+# No local resources required
+./start-platform.sh
 ```
 
-### **3. Complete Setup (Automated)**
+### 2. Local Development
 ```bash
-# Make setup script executable
-chmod +x scripts/setup-with-mem0.sh
+# Clone repository
+git clone https://github.com/your-username/intelligence-os-platform.git
+cd intelligence-os-platform
 
-# Run complete setup
-./scripts/setup-with-mem0.sh
+# Start with Docker Compose
+./scripts/deploy-local-simple.sh
 ```
 
-### **4. Start Development Environment**
+### 3. Cloud Deployment
 ```bash
-# Start all services with mem0 integration
-./scripts/dev-with-mem0.sh
+# Deploy to staging
+./scripts/deploy.sh staging aws us-west-2
+
+# Deploy to production
+./scripts/deploy.sh production aws us-west-2
 ```
 
-### **5. Access Platform**
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:5000
-- **Mem0 API**: http://localhost:8000
-- **Documentation**: http://localhost:8080
+## 📚 Documentation
 
-## 📚 **Complete Documentation Suite**
+- **[Codespace Setup Guide](README-CODESPACE.md)** - Cloud development setup
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Comprehensive deployment instructions
+- **[API Documentation](docs/api-documentation.md)** - REST API reference
+- **[Oracle 9.1 Protocol](docs/oracle-protocol.md)** - Protocol specification
+- **[Architecture Guide](docs/architecture-guide.md)** - System architecture details
 
-### **📖 Core Documentation**
-- **[Oracle 9.1 Protocol Specification](docs/analysis/platform-concept-analysis.md)**
-- **[Technical Architecture](docs/architecture/technical-architecture.md)**
-- **[API Reference](docs/api/api-reference.md)**
-- **[Implementation Roadmap](docs/implementation/implementation-roadmap.md)**
+## 🧪 Testing
 
-### **🔌 Protocol Integration Guides**
-- **[MCP Integration Strategy](docs/protocols/mcp-integration.md)**
-- **[Mem0 Memory Management](docs/infrastructure/mem0-integration.md)**
-- **[Tanka.ai Personal Assistants](docs/ai-assistants/tanka-ai-integration.md)**
-- **[Zoom + Tines Workflows](docs/integrations/zoom-tines-workflow.md)**
-
-### **🏗️ Infrastructure Documentation**
-- **[AI Infrastructure Stack](docs/infrastructure/ai-infrastructure-stack.md)**
-- **[Docker Compose Setup](docker-compose.yml)**
-- **[Kubernetes Deployment](k8s/)**
-- **[Production Deployment Guide](docs/deployment/)**
-
-### **🎨 Design & UI/UX**
-- **[Design Guidelines](docs/ui-ux/design-guidelines.md)**
-- **[Professional Wireframes](assets/wireframes/)**
-- **[Component Library](src/frontend/src/components/)**
-
-## 🔧 **Development Tools**
-
-### **Setup Scripts**
-- **`scripts/setup-with-mem0.sh`** - Complete environment setup with all protocols
-- **`scripts/dev-with-mem0.sh`** - Start development environment
-- **`scripts/test-mem0.sh`** - Run comprehensive test suite
-- **`scripts/deploy.sh`** - Production deployment
-
-### **Testing Framework**
 ```bash
 # Run all tests
 npm run test:all
 
-# Test specific protocols
-npm run test:oracle
-npm run test:mcp
-npm run test:tanka
-npm run test:mem0
-
-# Integration tests
+# Run specific test suites
+npm run test:unit
 npm run test:integration
+npm run test:security
+npm run test:performance
 ```
 
-### **Code Quality Tools**
-- **ESLint** - JavaScript/TypeScript linting
-- **Prettier** - Code formatting
-- **Black** - Python code formatting
-- **pytest** - Python testing framework
-- **Jest** - JavaScript testing framework
+## 🔧 Configuration
 
-## 🌟 **Key Features**
+### Environment Variables
+Copy `.env.example` to `.env` and configure:
 
-### **🧠 Intelligent Analysis**
-- **Six-Dimensional Meeting Analysis** using Oracle 9.1 Protocol
-- **Real-time AI Processing** with context-aware responses
-- **Personality-Driven Insights** through Tanka.ai integration
-- **Persistent Memory Management** via Mem0 architecture
-
-### **🔄 Automated Workflows**
-- **Zero-Touch Meeting Processing** from Zoom to insights
-- **Intelligent Action Distribution** through Tines workflows
-- **Automated Follow-up Orchestration** with smart scheduling
-- **Discrepancy Detection & Resolution** with voting mechanisms
-
-### **👥 Personalized Experience**
-- **Individual AI Assistants** with personality adaptation
-- **Strategic Post-Meeting Debriefs** for each participant
-- **Continuous Learning** from user interactions and feedback
-- **Cross-Participant Insight Synthesis** for team intelligence
-
-### **🏢 Enterprise-Ready**
-- **Scalable Architecture** supporting thousands of concurrent users
-- **Security-First Design** with enterprise authentication
-- **Multi-Tenant Support** for organizational isolation
-- **Comprehensive Monitoring** and alerting systems
-
-## 🔌 **Integration Ecosystem**
-
-### **Meeting Platforms**
-- ✅ **Zoom** - Complete integration with webhooks and API
-- 🔄 **Microsoft Teams** - In development
-- 🔄 **Google Meet** - Planned
-- 🔄 **Webex** - Planned
-
-### **Workflow Automation**
-- ✅ **Tines** - Complete workflow orchestration
-- 🔄 **Zapier** - Basic integration available
-- 🔄 **Microsoft Power Automate** - Planned
-- 🔄 **n8n** - Community integration
-
-### **AI & Memory Systems**
-- ✅ **OpenAI GPT-4** - Primary AI engine
-- ✅ **Mem0** - Persistent memory management
-- ✅ **Qdrant** - Vector database for semantic search
-- ✅ **Neo4j** - Graph database for relationship mapping
-
-### **Communication & Collaboration**
-- ✅ **Email** - Automated notifications and summaries
-- 🔄 **Slack** - Real-time updates and bot integration
-- 🔄 **Microsoft Teams** - Chat and notification integration
-- 🔄 **Discord** - Community and team communication
-
-## 📊 **Performance & Scalability**
-
-### **Benchmarks**
-- **Meeting Processing**: < 30 seconds for 1-hour meeting
-- **Concurrent Users**: 10,000+ simultaneous users
-- **API Response Time**: < 200ms average
-- **Memory Efficiency**: 99.9% uptime with intelligent caching
-
-### **Scalability Features**
-- **Horizontal Scaling** with Kubernetes orchestration
-- **Intelligent Load Balancing** across multiple instances
-- **Database Sharding** for large-scale deployments
-- **CDN Integration** for global content delivery
-
-## 🔒 **Security & Compliance**
-
-### **Security Features**
-- **End-to-End Encryption** for all meeting data
-- **Role-Based Access Control** (RBAC) with fine-grained permissions
-- **OAuth 2.0 / SAML** integration for enterprise authentication
-- **Audit Logging** for all system activities
-
-### **Compliance Standards**
-- **GDPR** - European data protection compliance
-- **HIPAA** - Healthcare data protection (optional module)
-- **SOC 2 Type II** - Security and availability controls
-- **ISO 27001** - Information security management
-
-## 🎯 **Use Cases**
-
-### **Strategic Planning**
-- **Executive Leadership Teams** - Strategic decision analysis and alignment
-- **Board Meetings** - Governance and oversight intelligence
-- **Strategic Planning Sessions** - Long-term vision and goal setting
-
-### **Operational Excellence**
-- **Team Standups** - Daily operational intelligence and blockers
-- **Project Reviews** - Progress tracking and risk assessment
-- **Cross-Functional Collaboration** - Alignment and communication optimization
-
-### **Organizational Development**
-- **All-Hands Meetings** - Culture and engagement analysis
-- **Training Sessions** - Learning effectiveness and knowledge transfer
-- **Performance Reviews** - Individual and team development insights
-
-### **Customer & Partner Engagement**
-- **Client Meetings** - Relationship intelligence and satisfaction tracking
-- **Partner Collaborations** - Strategic partnership optimization
-- **Sales Calls** - Conversion analysis and opportunity identification
-
-## 🛠️ **Customization & Extensions**
-
-### **Protocol Extensions**
-- **Custom Analysis Dimensions** - Add organization-specific analysis criteria
-- **Industry-Specific Modules** - Healthcare, finance, education, etc.
-- **Regional Adaptations** - Cultural and linguistic customizations
-- **Integration Plugins** - Connect with existing enterprise systems
-
-### **AI Model Customization**
-- **Fine-Tuned Models** - Train on organization-specific data
-- **Custom Personality Profiles** - Develop unique assistant personalities
-- **Domain-Specific Knowledge** - Industry expertise integration
-- **Multi-Language Support** - Global deployment capabilities
-
-## 📈 **Roadmap & Future Development**
-
-### **Q1 2025**
-- ✅ **Complete Protocol Suite** - Oracle 9.1, MCP, Tanka.ai, Mem0
-- ✅ **Zoom + Tines Integration** - Full workflow automation
-- 🔄 **Mobile Applications** - iOS and Android native apps
-- 🔄 **Advanced Analytics Dashboard** - Executive intelligence views
-
-### **Q2 2025**
-- 🔄 **Microsoft Teams Integration** - Complete platform support
-- 🔄 **Advanced AI Models** - GPT-5 and specialized models
-- 🔄 **Real-time Collaboration** - Live meeting intelligence
-- 🔄 **API Marketplace** - Third-party integration ecosystem
-
-### **Q3 2025**
-- 🔄 **Enterprise SSO** - Advanced authentication systems
-- 🔄 **Multi-Tenant SaaS** - Cloud-native deployment
-- 🔄 **Advanced Security** - Zero-trust architecture
-- 🔄 **Global Deployment** - Multi-region support
-
-## 🤝 **Contributing**
-
-We welcome contributions from the community! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
-
-- **Code Standards** - Development guidelines and best practices
-- **Testing Requirements** - Comprehensive testing protocols
-- **Documentation Standards** - Technical writing guidelines
-- **Review Process** - Pull request and code review procedures
-
-### **Development Setup**
 ```bash
-# Fork the repository
-git fork https://github.com/troymork/Intelligence-OS-Meeting-Intelligence-Platform.git
+# AI Services
+OPENAI_API_KEY=your-openai-api-key
+ANTHROPIC_API_KEY=your-anthropic-api-key
 
-# Create feature branch
-git checkout -b feature/your-feature-name
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/intelligence_os
 
-# Make changes and test
-npm run test:all
-
-# Submit pull request
-git push origin feature/your-feature-name
+# External Integrations
+NOTION_API_KEY=your-notion-api-key
+ZAPIER_WEBHOOK_SECRET=your-zapier-secret
 ```
 
-## 📄 **License**
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 **Support**
+## 🙏 Acknowledgments
 
-### **Documentation**
-- **[Complete Documentation](docs/)** - Comprehensive guides and references
-- **[API Documentation](docs/api/)** - Complete API reference
-- **[Troubleshooting Guide](docs/troubleshooting/)** - Common issues and solutions
+- **Oracle 9.1 Protocol** specification
+- **OpenAI** for GPT-4 API
+- **Anthropic** for Claude API
+- **GitHub** for Codespaces infrastructure
+- **Open source community** for foundational tools
 
-### **Community**
-- **GitHub Issues** - Bug reports and feature requests
-- **GitHub Discussions** - Community support and questions
-- **Discord Server** - Real-time community chat (coming soon)
+## 📞 Support
 
-### **Enterprise Support**
-- **Professional Services** - Implementation and customization
-- **Training Programs** - Team onboarding and best practices
-- **24/7 Support** - Enterprise-grade support packages
+- **Documentation**: [docs/](docs/)
+- **Issues**: [GitHub Issues](https://github.com/your-username/intelligence-os-platform/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-username/intelligence-os-platform/discussions)
 
 ---
 
-## 🎉 **Acknowledgments**
-
-This comprehensive framework suite was developed through extensive collaborative design and testing. Special thanks to all contributors who helped shape the Oracle 9.1 Protocol ecosystem.
-
-**Built with ❤️ for the future of organizational intelligence.**
-
----
-
-**Repository**: https://github.com/troymork/Intelligence-OS-Meeting-Intelligence-Platform  
-**Live Demo**: [Coming Soon]  
-**Documentation**: [docs/](docs/)  
-**API Reference**: [docs/api/](docs/api/)
-
+**Built with ❤️ for organizational intelligence and human flourishing**

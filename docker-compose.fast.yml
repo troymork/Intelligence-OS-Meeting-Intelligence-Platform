@@ -1,0 +1,118 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: intelligence-os-postgres
+    environment:
+      POSTGRES_DB: intelligence_os
+      POSTGRES_USER: intelligence_user
+      POSTGRES_PASSWORD: intelligence_pass
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - intelligence-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U intelligence_user -d intelligence_os"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: intelligence-os-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - intelligence-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API Service (Fast Build)
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile.fast
+    container_name: intelligence-os-backend
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+      - DATABASE_URL=postgresql://intelligence_user:intelligence_pass@postgres:5432/intelligence_os
+      - REDIS_URL=redis://redis:6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - CORS_ORIGINS=http://localhost:3000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/backend:/app
+      - backend_logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - intelligence-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Service (Development)
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile.dev
+    container_name: intelligence-os-frontend
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_ENVIRONMENT=development
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./src/frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - intelligence-network
+    restart: unless-stopped
+
+  # Voice Processing Service (Simplified)
+  voice-processor:
+    build:
+      context: ./src/voice-processor
+      dockerfile: Dockerfile
+    container_name: intelligence-os-voice-processor
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - BACKEND_URL=http://backend:8000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./src/voice-processor:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - intelligence-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_logs:
+
+networks:
+  intelligence-network:
+    driver: bridge

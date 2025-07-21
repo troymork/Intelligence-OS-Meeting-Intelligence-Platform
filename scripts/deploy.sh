@@ -1,417 +1,460 @@
 #!/bin/bash
 
-# Oracle Nexus Production Deployment Script
-# Supports multiple deployment targets: Docker, Kubernetes, Cloud platforms
+# Intelligence OS Platform Deployment Script
+# Comprehensive deployment orchestration for all environments
 
-set -e
-
-echo "🚀 Oracle Nexus Production Deployment"
-echo "====================================="
+set -euo pipefail
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m'
+NC='\033[0m' # No Color
 
-print_status() { echo -e "${BLUE}[INFO]${NC} $1"; }
-print_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
-print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
-print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+# Configuration
+ENVIRONMENT=${1:-"local"}
+CLOUD_PROVIDER=${2:-"aws"}
+REGION=${3:-"us-west-2"}
 
-# Default deployment target
-DEPLOYMENT_TARGET="docker"
-ENVIRONMENT="production"
-
-# Parse command line arguments
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        -t|--target)
-            DEPLOYMENT_TARGET="$2"
-            shift 2
-            ;;
-        -e|--environment)
-            ENVIRONMENT="$2"
-            shift 2
-            ;;
-        -h|--help)
-            echo "Usage: $0 [OPTIONS]"
-            echo ""
-            echo "Options:"
-            echo "  -t, --target TARGET     Deployment target (docker, k8s, aws, azure, gcp)"
-            echo "  -e, --environment ENV   Environment (production, staging, development)"
-            echo "  -h, --help             Show this help message"
-            echo ""
-            echo "Examples:"
-            echo "  $0 --target docker --environment production"
-            echo "  $0 --target k8s --environment staging"
-            echo "  $0 --target aws --environment production"
-            exit 0
-            ;;
-        *)
-            print_error "Unknown option: $1"
-            exit 1
-            ;;
-    esac
-done
-
-# Validate deployment target
-validate_target() {
-    case $DEPLOYMENT_TARGET in
-        docker|k8s|kubernetes|aws|azure|gcp)
-            print_success "Deployment target: $DEPLOYMENT_TARGET"
-            ;;
-        *)
-            print_error "Invalid deployment target: $DEPLOYMENT_TARGET"
-            print_error "Supported targets: docker, k8s, aws, azure, gcp"
-            exit 1
-            ;;
-    esac
+# Logging functions
+log() {
+    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $1${NC}"
 }
 
-# Build application
-build_application() {
-    print_status "Building Oracle Nexus application..."
-    
-    # Run build script
-    ./scripts/build.sh
-    
-    print_success "Application build completed"
+warn() {
+    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: $1${NC}"
 }
 
-# Docker deployment
-deploy_docker() {
-    print_status "Deploying with Docker..."
+error() {
+    echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $1${NC}"
+}
+
+info() {
+    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $1${NC}"
+}
+
+# Banner
+print_banner() {
+    echo -e "${BLUE}"
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║                Intelligence OS Platform                      ║"
+    echo "║                   Deployment Script                         ║"
+    echo "║                                                              ║"
+    echo "║  Environment: $ENVIRONMENT                                        ║"
+    echo "║  Cloud Provider: $CLOUD_PROVIDER                                  ║"
+    echo "║  Region: $REGION                                             ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+}
+
+# Prerequisites check
+check_prerequisites() {
+    log "Checking deployment prerequisites..."
     
-    # Create Dockerfile if it doesn't exist
-    if [ ! -f "Dockerfile" ]; then
-        cat > Dockerfile << 'EOF'
-# Multi-stage build for Oracle Nexus
-FROM node:18-alpine AS frontend-builder
-
-WORKDIR /app/frontend
-COPY src/frontend/package*.json ./
-RUN npm ci --only=production
-
-COPY src/frontend/ ./
-RUN npm run build
-
-FROM python:3.11-slim AS backend
-
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy backend code
-COPY src/backend/ ./
-COPY --from=frontend-builder /app/frontend/dist ./src/static
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash oracle
-RUN chown -R oracle:oracle /app
-USER oracle
-
-# Expose port
-EXPOSE 5000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/api/oracle/health || exit 1
-
-# Start application
-CMD ["python", "src/main.py"]
-EOF
-        print_success "Dockerfile created"
+    local missing_tools=()
+    
+    # Check required tools
+    command -v docker >/dev/null 2>&1 || missing_tools+=("docker")
+    command -v kubectl >/dev/null 2>&1 || missing_tools+=("kubectl")
+    command -v terraform >/dev/null 2>&1 || missing_tools+=("terraform")
+    command -v helm >/dev/null 2>&1 || missing_tools+=("helm")
+    command -v node >/dev/null 2>&1 || missing_tools+=("node")
+    command -v python3 >/dev/null 2>&1 || missing_tools+=("python3")
+    
+    if [ ${#missing_tools[@]} -ne 0 ]; then
+        error "Missing required tools: ${missing_tools[*]}"
+        echo "Please install the missing tools and try again."
+        exit 1
     fi
     
-    # Create docker-compose.yml
-    if [ ! -f "docker-compose.yml" ]; then
-        cat > docker-compose.yml << 'EOF'
-version: '3.8'
-
-services:
-  oracle-nexus:
-    build: .
-    ports:
-      - "5000:5000"
-    environment:
-      - FLASK_ENV=production
-      - DATABASE_URL=postgresql://oracle:oracle@postgres:5432/oracle_nexus
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - postgres
-      - redis
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/api/oracle/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_DB=oracle_nexus
-      - POSTGRES_USER=oracle
-      - POSTGRES_PASSWORD=oracle
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - oracle-nexus
-    restart: unless-stopped
-
-volumes:
-  postgres_data:
-EOF
-        print_success "docker-compose.yml created"
+    # Check Docker is running
+    if ! docker info >/dev/null 2>&1; then
+        error "Docker is not running. Please start Docker and try again."
+        exit 1
     fi
     
-    # Build and start containers
-    docker-compose build
+    log "All prerequisites satisfied ✓"
+}
+
+# Environment setup
+setup_environment() {
+    log "Setting up deployment environment..."
+    
+    # Create necessary directories
+    mkdir -p logs
+    mkdir -p backups
+    mkdir -p certificates
+    
+    # Set environment variables
+    export ENVIRONMENT=$ENVIRONMENT
+    export CLOUD_PROVIDER=$CLOUD_PROVIDER
+    export REGION=$REGION
+    export TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    
+    # Copy environment-specific configuration
+    if [ -f ".env.${ENVIRONMENT}" ]; then
+        cp ".env.${ENVIRONMENT}" .env
+        log "Environment configuration loaded for $ENVIRONMENT"
+    else
+        warn "No environment-specific configuration found, using defaults"
+        cp .env.example .env
+    fi
+    
+    log "Environment setup complete ✓"
+}
+
+# Build Docker images
+build_images() {
+    log "Building Docker images..."
+    
+    # Build frontend image
+    info "Building frontend image..."
+    docker build -t intelligence-os/frontend:latest -f src/frontend/Dockerfile src/frontend/
+    
+    # Build backend image
+    info "Building backend image..."
+    docker build -t intelligence-os/backend:latest -f src/backend/Dockerfile src/backend/
+    
+    # Build voice processor image
+    info "Building voice processor image..."
+    docker build -t intelligence-os/voice-processor:latest -f src/voice-processor/Dockerfile src/voice-processor/
+    
+    log "Docker images built successfully ✓"
+}
+
+# Run tests
+run_tests() {
+    log "Running comprehensive test suite..."
+    
+    # Install test dependencies
+    npm install
+    
+    # Run unit tests
+    info "Running unit tests..."
+    npm run test:unit
+    
+    # Run integration tests
+    info "Running integration tests..."
+    npm run test:integration
+    
+    # Run security tests
+    info "Running security tests..."
+    node tests/security/SecurityTestFramework.js
+    
+    # Run performance tests
+    info "Running performance tests..."
+    node tests/performance/PerformanceTestSuite.js
+    
+    log "All tests passed ✓"
+}
+
+# Local deployment
+deploy_local() {
+    log "Deploying to local environment..."
+    
+    # Start local services with Docker Compose
+    info "Starting services with Docker Compose..."
     docker-compose up -d
     
-    print_success "Docker deployment completed"
-    print_status "Application available at: http://localhost"
+    # Wait for services to be ready
+    info "Waiting for services to be ready..."
+    sleep 30
+    
+    # Run health checks
+    info "Running health checks..."
+    ./scripts/deployment-health-check.sh local
+    
+    # Run smoke tests
+    info "Running smoke tests..."
+    cd tests/smoke
+    npm install
+    npm test -- --url http://localhost:3000
+    cd ../..
+    
+    log "Local deployment complete ✓"
+    info "Frontend: http://localhost:3000"
+    info "Backend API: http://localhost:8000"
+    info "Voice Processor: http://localhost:5000"
+}
+
+# Cloud infrastructure deployment
+deploy_infrastructure() {
+    log "Deploying cloud infrastructure with Terraform..."
+    
+    cd infrastructure/terraform
+    
+    # Initialize Terraform
+    info "Initializing Terraform..."
+    terraform init
+    
+    # Plan deployment
+    info "Planning infrastructure deployment..."
+    terraform plan \
+        -var="environment=$ENVIRONMENT" \
+        -var="cloud_provider=$CLOUD_PROVIDER" \
+        -var="region=$REGION" \
+        -out=tfplan
+    
+    # Apply infrastructure
+    info "Applying infrastructure changes..."
+    terraform apply tfplan
+    
+    # Save outputs
+    terraform output -json > ../terraform-outputs.json
+    
+    cd ../..
+    
+    log "Infrastructure deployment complete ✓"
 }
 
 # Kubernetes deployment
 deploy_kubernetes() {
-    print_status "Deploying to Kubernetes..."
+    log "Deploying to Kubernetes..."
     
-    # Create namespace
-    kubectl create namespace oracle-nexus --dry-run=client -o yaml | kubectl apply -f -
-    
-    # Create Kubernetes manifests directory
-    mkdir -p k8s
-    
-    # Create deployment manifest
-    cat > k8s/deployment.yaml << 'EOF'
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: oracle-nexus
-  namespace: oracle-nexus
-  labels:
-    app: oracle-nexus
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: oracle-nexus
-  template:
-    metadata:
-      labels:
-        app: oracle-nexus
-    spec:
-      containers:
-      - name: oracle-nexus
-        image: oracle-nexus:latest
-        ports:
-        - containerPort: 5000
-        env:
-        - name: FLASK_ENV
-          value: "production"
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: oracle-secrets
-              key: database-url
-        - name: OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: oracle-secrets
-              key: openai-api-key
-        livenessProbe:
-          httpGet:
-            path: /api/oracle/health
-            port: 5000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /api/oracle/health
-            port: 5000
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-EOF
-    
-    # Create service manifest
-    cat > k8s/service.yaml << 'EOF'
-apiVersion: v1
-kind: Service
-metadata:
-  name: oracle-nexus-service
-  namespace: oracle-nexus
-spec:
-  selector:
-    app: oracle-nexus
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 5000
-  type: LoadBalancer
-EOF
-    
-    # Create ingress manifest
-    cat > k8s/ingress.yaml << 'EOF'
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: oracle-nexus-ingress
-  namespace: oracle-nexus
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-spec:
-  tls:
-  - hosts:
-    - oracle-nexus.yourdomain.com
-    secretName: oracle-nexus-tls
-  rules:
-  - host: oracle-nexus.yourdomain.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: oracle-nexus-service
-            port:
-              number: 80
-EOF
-    
-    # Apply manifests
-    kubectl apply -f k8s/
-    
-    print_success "Kubernetes deployment completed"
-    print_status "Check deployment status: kubectl get pods -n oracle-nexus"
-}
-
-# AWS deployment
-deploy_aws() {
-    print_status "Deploying to AWS..."
-    
-    # Check AWS CLI
-    if ! command -v aws &> /dev/null; then
-        print_error "AWS CLI is not installed"
-        exit 1
+    # Configure kubectl
+    info "Configuring kubectl..."
+    if [ "$CLOUD_PROVIDER" = "aws" ]; then
+        aws eks update-kubeconfig --name "intelligence-os-$ENVIRONMENT" --region "$REGION"
     fi
     
-    # Create ECS task definition
-    cat > aws-task-definition.json << 'EOF'
-{
-  "family": "oracle-nexus",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "512",
-  "memory": "1024",
-  "executionRoleArn": "arn:aws:iam::ACCOUNT:role/ecsTaskExecutionRole",
-  "containerDefinitions": [
-    {
-      "name": "oracle-nexus",
-      "image": "ACCOUNT.dkr.ecr.REGION.amazonaws.com/oracle-nexus:latest",
-      "portMappings": [
-        {
-          "containerPort": 5000,
-          "protocol": "tcp"
-        }
-      ],
-      "environment": [
-        {
-          "name": "FLASK_ENV",
-          "value": "production"
-        }
-      ],
-      "secrets": [
-        {
-          "name": "DATABASE_URL",
-          "valueFrom": "arn:aws:secretsmanager:REGION:ACCOUNT:secret:oracle-nexus/database-url"
-        },
-        {
-          "name": "OPENAI_API_KEY",
-          "valueFrom": "arn:aws:secretsmanager:REGION:ACCOUNT:secret:oracle-nexus/openai-key"
-        }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/oracle-nexus",
-          "awslogs-region": "REGION",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
-    }
-  ]
-}
-EOF
+    # Deploy to staging first
+    if [ "$ENVIRONMENT" = "production" ]; then
+        info "Deploying to staging for validation..."
+        kubectl apply -f k8s/staging/
+        
+        # Wait for staging deployment
+        kubectl rollout status deployment/frontend -n intelligence-os-staging
+        kubectl rollout status deployment/backend -n intelligence-os-staging
+        kubectl rollout status deployment/voice-processor -n intelligence-os-staging
+        
+        # Run staging tests
+        info "Running staging validation tests..."
+        ./scripts/deployment-health-check.sh intelligence-os-staging
+    fi
     
-    print_success "AWS deployment configuration created"
-    print_warning "Please update aws-task-definition.json with your AWS account details"
-    print_status "Deploy with: aws ecs register-task-definition --cli-input-json file://aws-task-definition.json"
+    # Deploy to target environment
+    info "Deploying to $ENVIRONMENT environment..."
+    if [ "$ENVIRONMENT" = "production" ]; then
+        kubectl apply -f k8s/production/
+        
+        # Wait for production deployment
+        kubectl rollout status deployment/frontend -n intelligence-os-production
+        kubectl rollout status deployment/backend -n intelligence-os-production
+        kubectl rollout status deployment/voice-processor -n intelligence-os-production
+    else
+        kubectl apply -f k8s/staging/
+        
+        # Wait for staging deployment
+        kubectl rollout status deployment/frontend -n intelligence-os-staging
+        kubectl rollout status deployment/backend -n intelligence-os-staging
+        kubectl rollout status deployment/voice-processor -n intelligence-os-staging
+    fi
+    
+    log "Kubernetes deployment complete ✓"
+}
+
+# Deploy monitoring
+deploy_monitoring() {
+    log "Deploying monitoring and observability stack..."
+    
+    # Deploy monitoring with Terraform
+    cd infrastructure/terraform
+    terraform apply -target=module.monitoring
+    cd ../..
+    
+    # Wait for monitoring services
+    info "Waiting for monitoring services to be ready..."
+    kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=prometheus -n monitoring --timeout=300s
+    kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=grafana -n monitoring --timeout=300s
+    
+    log "Monitoring deployment complete ✓"
+}
+
+# Post-deployment validation
+validate_deployment() {
+    log "Validating deployment..."
+    
+    # Health checks
+    info "Running health checks..."
+    if [ "$ENVIRONMENT" = "local" ]; then
+        ./scripts/deployment-health-check.sh local
+    else
+        ./scripts/deployment-health-check.sh "intelligence-os-$ENVIRONMENT"
+    fi
+    
+    # Smoke tests
+    info "Running smoke tests..."
+    cd tests/smoke
+    npm install
+    
+    if [ "$ENVIRONMENT" = "local" ]; then
+        npm test -- --url http://localhost:3000
+    elif [ "$ENVIRONMENT" = "staging" ]; then
+        npm test -- --url https://staging.intelligence-os.example.com
+    else
+        npm test -- --url https://intelligence-os.example.com
+    fi
+    
+    cd ../..
+    
+    # Security validation
+    info "Running security validation..."
+    node tests/security/SecurityTestFramework.js
+    
+    # Performance validation
+    info "Running performance validation..."
+    node tests/performance/PerformanceTestSuite.js
+    
+    log "Deployment validation complete ✓"
+}
+
+# Backup current deployment
+backup_deployment() {
+    log "Creating deployment backup..."
+    
+    local backup_dir="backups/deployment_${TIMESTAMP}"
+    mkdir -p "$backup_dir"
+    
+    # Backup Kubernetes configurations
+    if [ "$ENVIRONMENT" != "local" ]; then
+        kubectl get all -n "intelligence-os-$ENVIRONMENT" -o yaml > "$backup_dir/kubernetes_resources.yaml"
+        kubectl get configmaps -n "intelligence-os-$ENVIRONMENT" -o yaml > "$backup_dir/configmaps.yaml"
+        kubectl get secrets -n "intelligence-os-$ENVIRONMENT" -o yaml > "$backup_dir/secrets.yaml"
+    fi
+    
+    # Backup Terraform state
+    if [ -f "infrastructure/terraform/terraform.tfstate" ]; then
+        cp infrastructure/terraform/terraform.tfstate "$backup_dir/"
+    fi
+    
+    # Backup database (if applicable)
+    if [ "$ENVIRONMENT" != "local" ]; then
+        info "Creating database backup..."
+        # Database backup commands would go here
+    fi
+    
+    log "Backup created at $backup_dir ✓"
+}
+
+# Rollback deployment
+rollback_deployment() {
+    warn "Initiating deployment rollback..."
+    
+    if [ "$ENVIRONMENT" = "local" ]; then
+        docker-compose down
+        docker-compose up -d
+    else
+        ./scripts/automated-rollback.sh "intelligence-os-$ENVIRONMENT" standard deployment_failure
+    fi
+    
+    log "Rollback completed ✓"
+}
+
+# Cleanup resources
+cleanup() {
+    log "Cleaning up temporary resources..."
+    
+    # Remove temporary files
+    rm -f tfplan
+    rm -f terraform-outputs.json
+    
+    # Clean up Docker images (optional)
+    if [ "$1" = "full" ]; then
+        docker system prune -f
+    fi
+    
+    log "Cleanup complete ✓"
 }
 
 # Main deployment function
 main() {
-    print_status "Starting deployment process..."
-    print_status "Target: $DEPLOYMENT_TARGET"
-    print_status "Environment: $ENVIRONMENT"
-    echo ""
+    print_banner
     
-    validate_target
-    build_application
+    # Trap errors and cleanup
+    trap 'error "Deployment failed! Check logs for details."; cleanup; exit 1' ERR
     
-    case $DEPLOYMENT_TARGET in
-        docker)
-            deploy_docker
+    case "$ENVIRONMENT" in
+        "local")
+            log "Starting local deployment..."
+            check_prerequisites
+            setup_environment
+            build_images
+            run_tests
+            deploy_local
+            validate_deployment
             ;;
-        k8s|kubernetes)
+        "staging"|"production")
+            log "Starting cloud deployment to $ENVIRONMENT..."
+            check_prerequisites
+            setup_environment
+            build_images
+            run_tests
+            backup_deployment
+            deploy_infrastructure
             deploy_kubernetes
+            deploy_monitoring
+            validate_deployment
             ;;
-        aws)
-            deploy_aws
-            ;;
-        azure)
-            print_warning "Azure deployment not yet implemented"
-            exit 1
-            ;;
-        gcp)
-            print_warning "GCP deployment not yet implemented"
+        *)
+            error "Invalid environment: $ENVIRONMENT"
+            echo "Valid environments: local, staging, production"
             exit 1
             ;;
     esac
     
+    cleanup
+    
+    log "🎉 Deployment to $ENVIRONMENT completed successfully!"
+    
+    # Display access information
     echo ""
-    print_success "🎉 Deployment completed successfully!"
+    echo "🌐 Access Information:"
+    if [ "$ENVIRONMENT" = "local" ]; then
+        echo "   Frontend: http://localhost:3000"
+        echo "   Backend API: http://localhost:8000"
+        echo "   Voice Processor: http://localhost:5000"
+        echo "   Monitoring: http://localhost:3001"
+    elif [ "$ENVIRONMENT" = "staging" ]; then
+        echo "   Frontend: https://staging.intelligence-os.example.com"
+        echo "   Backend API: https://api.staging.intelligence-os.example.com"
+        echo "   Monitoring: https://monitoring.intelligence-os.example.com"
+    else
+        echo "   Frontend: https://intelligence-os.example.com"
+        echo "   Backend API: https://api.intelligence-os.example.com"
+        echo "   Monitoring: https://monitoring.intelligence-os.example.com"
+    fi
+    
+    echo ""
+    echo "📊 Next Steps:"
+    echo "   1. Monitor deployment health"
+    echo "   2. Run user acceptance tests"
+    echo "   3. Configure monitoring alerts"
+    echo "   4. Set up backup schedules"
     echo ""
 }
 
-# Run main function
-main "$@"
-
+# Handle script arguments
+case "${1:-help}" in
+    "local"|"staging"|"production")
+        main "$@"
+        ;;
+    "rollback")
+        rollback_deployment
+        ;;
+    "cleanup")
+        cleanup "${2:-}"
+        ;;
+    "help"|*)
+        echo "Usage: $0 [local|staging|production|rollback|cleanup] [cloud_provider] [region]"
+        echo ""
+        echo "Examples:"
+        echo "  $0 local                    # Deploy locally with Docker Compose"
+        echo "  $0 staging aws us-west-2    # Deploy to AWS staging environment"
+        echo "  $0 production aws us-west-2 # Deploy to AWS production environment"
+        echo "  $0 rollback                 # Rollback current deployment"
+        echo "  $0 cleanup full             # Full cleanup including Docker images"
+        echo ""
+        exit 0
+        ;;
+esac

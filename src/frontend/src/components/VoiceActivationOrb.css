@@ -1,0 +1,457 @@
+/**
+ * Voice Activation Orb Styles
+ * Neumorphic design with real-time audio visualization and feedback
+ */
+
+.voice-orb-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  user-select: none;
+}
+
+/* ===== MAIN ORB ===== */
+.voice-orb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--primary-bg);
+  box-shadow: var(--shadow-neumorphic);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  overflow: hidden;
+}
+
+/* Orb Sizes */
+.voice-orb--small {
+  width: 60px;
+  height: 60px;
+}
+
+.voice-orb--medium {
+  width: 80px;
+  height: 80px;
+}
+
+.voice-orb--large {
+  width: 120px;
+  height: 120px;
+}
+
+.voice-orb--xlarge {
+  width: 160px;
+  height: 160px;
+}
+
+/* Orb States */
+.voice-orb:hover:not(.voice-orb--disabled) {
+  box-shadow: var(--shadow-neumorphic-hover);
+  transform: translateY(-2px);
+}
+
+.voice-orb:active:not(.voice-orb--disabled) {
+  box-shadow: var(--shadow-neumorphic-active);
+  transform: translateY(0);
+}
+
+.voice-orb:focus {
+  outline: none;
+  box-shadow: var(--shadow-neumorphic), 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.voice-orb--active {
+  box-shadow: 
+    var(--shadow-neumorphic),
+    0 0 20px rgba(102, 126, 234, calc(0.3 + var(--pulse-intensity, 0) * 0.4)),
+    inset 0 0 20px rgba(102, 126, 234, calc(0.1 + var(--audio-level, 0) * 0.2));
+}
+
+.voice-orb--processing {
+  box-shadow: 
+    var(--shadow-neumorphic),
+    0 0 30px rgba(237, 137, 54, 0.5);
+}
+
+.voice-orb--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Status-based styling */
+.voice-orb--connected {
+  background: linear-gradient(135deg, 
+    var(--primary-bg) 0%, 
+    rgba(72, 187, 120, 0.1) 100%);
+}
+
+.voice-orb--error {
+  background: linear-gradient(135deg, 
+    var(--primary-bg) 0%, 
+    rgba(245, 101, 101, 0.1) 100%);
+}
+
+/* ===== ORB CORE ===== */
+.voice-orb__core {
+  position: relative;
+  width: 60%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--primary-bg);
+  box-shadow: var(--shadow-neumorphic-inset);
+  z-index: 3;
+}
+
+.voice-orb--small .voice-orb__core {
+  width: 70%;
+  height: 70%;
+}
+
+.voice-orb--xlarge .voice-orb__core {
+  width: 50%;
+  height: 50%;
+}
+
+/* ===== ICON ===== */
+.voice-orb__icon {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+}
+
+.voice-orb--small .voice-orb__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.voice-orb--large .voice-orb__icon {
+  width: 32px;
+  height: 32px;
+}
+
+.voice-orb--xlarge .voice-orb__icon {
+  width: 40px;
+  height: 40px;
+}
+
+.voice-orb--active .voice-orb__icon {
+  color: var(--accent-color);
+  transform: scale(1.1);
+}
+
+.voice-orb__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Processing Spinner */
+.voice-orb__processing-spinner {
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--text-muted);
+  border-top: 2px solid var(--warning-color);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== AUDIO LEVEL INDICATOR ===== */
+.voice-orb__level-indicator {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 4px;
+  background: var(--primary-bg);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-neumorphic-inset);
+  overflow: hidden;
+}
+
+.voice-orb__level-bar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--success-color), var(--warning-color), var(--error-color));
+  border-radius: var(--radius-sm);
+  transform-origin: bottom;
+  transition: transform 0.1s ease-out;
+}
+
+/* ===== PULSE RINGS ===== */
+.voice-orb__pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  border-radius: var(--radius-full);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.voice-orb--active .voice-orb__pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+.voice-orb__pulse-ring--1 {
+  width: 100%;
+  height: 100%;
+  animation-delay: 0s;
+}
+
+.voice-orb__pulse-ring--2 {
+  width: 120%;
+  height: 120%;
+  animation-delay: 0.7s;
+}
+
+.voice-orb__pulse-ring--3 {
+  width: 140%;
+  height: 140%;
+  animation-delay: 1.4s;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* ===== AUDIO VISUALIZER ===== */
+.voice-orb__visualizer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  display: flex;
+  align-items: end;
+  justify-content: space-around;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.voice-orb--active .voice-orb__visualizer {
+  opacity: 0.6;
+}
+
+.voice-orb__visualizer-bar {
+  width: 2px;
+  min-height: 2px;
+  background: linear-gradient(to top, 
+    rgba(102, 126, 234, 0.8), 
+    rgba(118, 75, 162, 0.8));
+  border-radius: var(--radius-sm);
+  transition: height 0.1s ease-out;
+  animation: visualizer-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes visualizer-pulse {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* ===== CONFIDENCE INDICATOR ===== */
+.voice-orb__confidence {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.voice-orb__confidence-arc {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: conic-gradient(
+    from 0deg,
+    var(--success-color) 0deg,
+    var(--success-color) var(--confidence-percentage, 0%),
+    transparent var(--confidence-percentage, 0%),
+    transparent 360deg
+  );
+  mask: radial-gradient(circle, transparent 70%, black 72%);
+  -webkit-mask: radial-gradient(circle, transparent 70%, black 72%);
+}
+
+/* ===== STATUS INDICATOR ===== */
+.voice-orb__status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.voice-orb__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-normal);
+}
+
+.voice-orb__status-dot--disconnected {
+  background: var(--text-muted);
+}
+
+.voice-orb__status-dot--connected {
+  background: var(--success-color);
+  box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+.voice-orb__status-dot--error {
+  background: var(--error-color);
+  box-shadow: 0 0 8px rgba(245, 101, 101, 0.5);
+}
+
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.voice-orb__status-text {
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-normal);
+}
+
+.voice-orb__status:has(.voice-orb__status-dot--connected) .voice-orb__status-text {
+  color: var(--success-color);
+}
+
+.voice-orb__status:has(.voice-orb__status-dot--error) .voice-orb__status-text {
+  color: var(--error-color);
+}
+
+/* ===== KEYBOARD HINT ===== */
+.voice-orb__hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-light);
+  opacity: 0.7;
+  transition: opacity var(--transition-normal);
+}
+
+.voice-orb-container:hover .voice-orb__hint {
+  opacity: 1;
+}
+
+.voice-orb__hint kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family-mono);
+  background: var(--secondary-bg);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-neumorphic-inset);
+  margin: 0 2px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .voice-orb--large {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .voice-orb--xlarge {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .voice-orb__hint {
+    display: none;
+  }
+  
+  .voice-orb__visualizer-bar {
+    width: 1.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .voice-orb--large {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .voice-orb--xlarge {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .voice-orb__status {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  .voice-orb__pulse-ring,
+  .voice-orb__processing-spinner,
+  .voice-orb__visualizer-bar {
+    animation: none !important;
+  }
+  
+  .voice-orb__status-dot--connected {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .voice-orb {
+    border: 2px solid var(--text-primary);
+  }
+  
+  .voice-orb__pulse-ring {
+    border-color: var(--text-primary);
+  }
+  
+  .voice-orb__visualizer-bar {
+    background: var(--text-primary);
+  }
+}
+
+/* Focus indicators for keyboard navigation */
+.voice-orb:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 4px;
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .voice-orb {
+    transform: none !important;
+  }
+  
+  .voice-orb:hover {
+    transform: none !important;
+  }
+  
+  .voice-orb:active {
+    transform: scale(0.95) !important;
+  }
+}

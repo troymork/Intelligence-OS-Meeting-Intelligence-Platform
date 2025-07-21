@@ -1,0 +1,522 @@
+/**
+ * Analytics Dashboard Styles
+ * Comprehensive visualization and analytics dashboard styling
+ */
+
+.analytics-dashboard {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--primary-bg);
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* ===== HEADER STYLES ===== */
+.analytics-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
+}
+
+.analytics-dashboard__title-section {
+  flex: 1;
+}
+
+.analytics-dashboard__title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+  line-height: var(--line-height-tight);
+}
+
+.analytics-dashboard__subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--text-muted);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+.analytics-dashboard__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+/* Time Range Selector */
+.analytics-dashboard__time-range {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.analytics-dashboard__time-range label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.analytics-dashboard__time-range select {
+  min-width: 120px;
+}
+
+/* View Toggle */
+.analytics-dashboard__view-toggle {
+  display: flex;
+  gap: var(--spacing-xs);
+  background: var(--secondary-bg);
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-neumorphic-inset);
+}
+
+.analytics-dashboard__view-toggle .neu-button {
+  min-width: 80px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+/* Options */
+.analytics-dashboard__options {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.analytics-dashboard__options label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+/* ===== METRICS SUMMARY ===== */
+.analytics-dashboard__metrics-summary {
+  margin-bottom: var(--spacing-xl);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-neumorphic-hover);
+}
+
+.metric-card__icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
+  border-radius: var(--radius-md);
+  color: white;
+  flex-shrink: 0;
+}
+
+.metric-card__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.metric-card__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.metric-card__value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: var(--spacing-xs);
+}
+
+.metric-card__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-xs);
+}
+
+.metric-card__change {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.metric-card__change.positive {
+  color: var(--success-color);
+}
+
+.metric-card__change.negative {
+  color: var(--error-color);
+}
+
+/* ===== CHART CONTAINERS ===== */
+.chart-card {
+  min-height: 400px;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  padding: var(--spacing-md);
+}
+
+.chart-container--radar {
+  height: 400px;
+}
+
+.chart-container--line {
+  height: 300px;
+}
+
+.chart-container--doughnut {
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-container--bar {
+  height: 300px;
+}
+
+.chart-container canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* ===== DETAILED ANALYSIS VIEW ===== */
+.detailed-analysis-view {
+  width: 100%;
+}
+
+.detailed-metrics {
+  padding: var(--spacing-lg);
+  background: var(--secondary-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-neumorphic-inset);
+}
+
+.detailed-metrics p {
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+/* ===== TRENDS ANALYSIS VIEW ===== */
+.trends-analysis-view {
+  width: 100%;
+}
+
+.trends-content {
+  padding: var(--spacing-lg);
+  background: var(--secondary-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-neumorphic-inset);
+}
+
+.trends-content p {
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+/* ===== INTERACTIVE ELEMENTS ===== */
+.analytics-dashboard__content {
+  flex: 1;
+}
+
+/* Chart hover effects */
+.chart-container:hover {
+  transform: translateY(-1px);
+}
+
+/* Metric selection */
+.metric-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.metric-selector__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--secondary-bg);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.metric-selector__item:hover {
+  background: var(--accent-color);
+  color: white;
+}
+
+.metric-selector__item.selected {
+  background: var(--accent-color);
+  color: white;
+  box-shadow: var(--shadow-neumorphic-inset);
+}
+
+.metric-selector__checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-sm);
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metric-selector__checkbox.checked::after {
+  content: '✓';
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+  .analytics-dashboard {
+    padding: var(--spacing-lg);
+  }
+  
+  .analytics-dashboard__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-lg);
+  }
+  
+  .analytics-dashboard__controls {
+    justify-content: space-between;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .analytics-dashboard {
+    padding: var(--spacing-md);
+  }
+  
+  .analytics-dashboard__title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .analytics-dashboard__subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .analytics-dashboard__controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+  
+  .analytics-dashboard__view-toggle {
+    justify-content: center;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+  
+  .metric-card {
+    padding: var(--spacing-md);
+  }
+  
+  .metric-card__icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .metric-card__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .metric-card__value {
+    font-size: var(--font-size-xl);
+  }
+  
+  .chart-container {
+    height: 250px;
+    padding: var(--spacing-sm);
+  }
+  
+  .chart-container--radar {
+    height: 300px;
+  }
+  
+  .chart-container--doughnut {
+    height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .analytics-dashboard {
+    padding: var(--spacing-sm);
+  }
+  
+  .analytics-dashboard__header {
+    gap: var(--spacing-md);
+  }
+  
+  .analytics-dashboard__title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .analytics-dashboard__view-toggle .neu-button {
+    min-width: 60px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+  
+  .metric-card {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-sm);
+  }
+  
+  .metric-card__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .chart-container {
+    height: 200px;
+  }
+  
+  .chart-container--radar {
+    height: 250px;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  .metric-card,
+  .chart-container {
+    transition: none !important;
+  }
+  
+  .metric-card:hover,
+  .chart-container:hover {
+    transform: none !important;
+  }
+}
+
+/* Focus indicators */
+.metric-card:focus,
+.analytics-dashboard__time-range select:focus,
+.analytics-dashboard__view-toggle .neu-button:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .metric-card,
+  .chart-container {
+    border: 1px solid var(--text-primary);
+  }
+  
+  .metrics-grid {
+    gap: var(--spacing-lg);
+  }
+}
+
+/* Print styles */
+@media print {
+  .analytics-dashboard {
+    background: white !important;
+    color: black !important;
+    padding: 0;
+  }
+  
+  .analytics-dashboard__controls {
+    display: none !important;
+  }
+  
+  .chart-container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  .metric-card {
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+}
+
+/* ===== ANIMATION KEYFRAMES ===== */
+@keyframes metric-update {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.metric-card__value.updating {
+  animation: metric-update 0.5s ease-in-out;
+}
+
+@keyframes chart-load {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chart-container.loading {
+  animation: chart-load 0.6s ease-out;
+}
+
+/* ===== DARK MODE ADJUSTMENTS ===== */
+[data-theme="dark"] .analytics-dashboard {
+  /* Chart.js canvas elements inherit colors from CSS variables */
+}
+
+[data-theme="dark"] .metric-card__icon {
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
+}
+
+[data-theme="dark"] .chart-container canvas {
+  filter: brightness(0.9);
+}

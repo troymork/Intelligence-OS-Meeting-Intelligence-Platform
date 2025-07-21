@@ -1,0 +1,40 @@
+name: intelligence-os-platform
+services:
+- name: backend
+  source_dir: src/backend
+  github:
+    repo: your-username/intelligence-os-platform
+    branch: main
+  run_command: python app.py
+  environment_slug: python
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  envs:
+  - key: FLASK_ENV
+    value: production
+  - key: DATABASE_URL
+    value: ${db.DATABASE_URL}
+  - key: REDIS_URL
+    value: ${redis.DATABASE_URL}
+
+- name: frontend
+  source_dir: src/frontend
+  github:
+    repo: your-username/intelligence-os-platform
+    branch: main
+  build_command: npm ci && npm run build
+  run_command: npx serve -s dist -l 3000
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+
+databases:
+- name: db
+  engine: PG
+  version: "13"
+  size: basic-xs
+
+- name: redis
+  engine: REDIS
+  version: "6"
+  size: basic-xs

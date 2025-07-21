@@ -154,10 +154,20 @@ setup_node_env() {
     
     cd src/frontend
     
+    # Check if pnpm is available
+    if command -v pnpm &> /dev/null; then
+        print_success "pnpm found"
+        PACKAGE_MANAGER="pnpm"
+    else
+        print_warning "pnpm not found, installing..."
+        npm install -g pnpm@8.15.0
+        PACKAGE_MANAGER="pnpm"
+    fi
+    
     # Install dependencies
     if [ -f "package.json" ]; then
-        npm install
-        print_success "Node.js dependencies installed"
+        $PACKAGE_MANAGER install --frozen-lockfile
+        print_success "Node.js dependencies installed with $PACKAGE_MANAGER"
     else
         print_error "package.json not found"
         exit 1
@@ -278,7 +288,11 @@ sleep 3
 # Start frontend
 echo "Starting frontend development server..."
 cd src/frontend
-npm run dev &
+if command -v pnpm &> /dev/null; then
+    pnpm dev &
+else
+    npm run dev &
+fi
 FRONTEND_PID=$!
 cd ../..
 

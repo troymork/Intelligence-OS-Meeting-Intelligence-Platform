@@ -1,0 +1,59 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "rules/*.yml"
+
+scrape_configs:
+  # Intelligence OS Backend
+  - job_name: 'intelligence-os-backend'
+    static_configs:
+      - targets: ['backend:5000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Intelligence OS AI Processor
+  - job_name: 'intelligence-os-ai-processor'
+    static_configs:
+      - targets: ['ai-processor:8001']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Intelligence OS Voice Processor
+  - job_name: 'intelligence-os-voice-processor'
+    static_configs:
+      - targets: ['voice-processor:8002']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Intelligence OS Integration Hub
+  - job_name: 'intelligence-os-integration-hub'
+    static_configs:
+      - targets: ['integration-hub:8003']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # PostgreSQL
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+    scrape_interval: 30s
+
+  # Redis
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 30s
+
+  # Node Exporter (if added)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 30s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093

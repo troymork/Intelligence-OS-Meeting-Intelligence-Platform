@@ -1,0 +1,31 @@
+# Minimal requirements for quick deployment
+# Core Flask Framework
+Flask==3.1.1
+flask-cors==6.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-JWT-Extended==4.6.0
+
+# Database
+SQLAlchemy==2.0.41
+psycopg2-binary==2.9.9
+
+# Basic AI (lightweight)
+openai==1.96.1
+requests==2.32.3
+
+# Data Processing (lightweight)
+pydantic==2.11.7
+jsonschema==4.23.0
+
+# Redis and Caching
+redis==5.2.0
+
+# Configuration and Environment
+python-dotenv==1.0.1
+pyyaml==6.0.2
+
+# Production Server
+gunicorn==23.0.0
+
+# Utilities
+python-dateutil==2.9.0

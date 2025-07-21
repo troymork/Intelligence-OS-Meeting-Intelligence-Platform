@@ -1,0 +1,25 @@
+{
+  "name": "intelligence-os-smoke-tests",
+  "version": "1.0.0",
+  "description": "Smoke tests for Intelligence OS Platform deployment validation",
+  "main": "smoke-tests.js",
+  "scripts": {
+    "test": "node smoke-tests.js",
+    "test:staging": "node smoke-tests.js --url https://staging.intelligence-os.example.com",
+    "test:production": "node smoke-tests.js --url https://intelligence-os.example.com",
+    "test:local": "node smoke-tests.js --url http://localhost:3000"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "commander": "^11.0.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "smoke-tests",
+    "deployment",
+    "validation",
+    "ci-cd"
+  ],
+  "author": "Intelligence OS Team",
+  "license": "MIT"
+}
