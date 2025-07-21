@@ -1,0 +1,6 @@
+{
+  "name": "Intelligence OS Platform (Minimal)",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "forwardPorts": [3000, 8000, 5000],
+  "postCreateCommand": "echo 'Codespace ready! Run: chmod +x scripts/*.sh && ./start-platform.sh'"
+}
